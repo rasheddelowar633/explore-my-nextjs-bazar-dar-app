@@ -1,5 +1,6 @@
 
 "use client";
+import CurrentYear from "@/Components/CurrentYear";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -68,8 +69,7 @@ export default function NotFound() {
         {/* Footer */}
         <div className="relative mt-10 border-t border-white/10 pt-5">
           <p className="text-xs tracking-wide text-gray-500">
-            © {new Date().getFullYear()} Bazar Dar. All rights reserved.
-          </p>
+© <CurrentYear /> Bazar Dar. All rights reserved.          </p>
         </div>
       </div>
     </main>

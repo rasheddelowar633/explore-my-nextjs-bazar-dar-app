@@ -1,6 +1,7 @@
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 const API_URL = "https://openapi.programming-hero.com/api/bazardor";
 
@@ -11,28 +12,56 @@ async function getCategory(slug) {
 
   if (!res.ok) return null;
 
-  return res.json();
+  const data = await res.json();
+
+  // API সরাসরি category অথবা { data: category } দিতে পারে
+  return data?.data ?? data;
 }
 
 async function getCategoryProducts(slug) {
   const res = await fetch(
     `${API_URL}/products?category=${encodeURIComponent(slug)}`,
-    { cache: "no-store" }
+    {
+      cache: "no-store",
+    }
   );
 
   if (!res.ok) {
     throw new Error("পণ্যের তথ্য লোড করা যায়নি।");
   }
 
-  return res.json();
+  const data = await res.json();
+
+  // API সরাসরি array অথবা { data: [...] } দিতে পারে
+  const products = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.data)
+      ? data.data
+      : [];
+
+  return products;
 }
 
-export default async function CategoryPage({ params }) {
-  const { slug } = await params;
+function CategoryLoading() {
+  return (
+    <main className="min-h-screen bg-gray-50 px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-6xl">
+        <div className="rounded-2xl bg-white p-8 text-center shadow-sm">
+          <p className="text-gray-600">
+            ক্যাটাগরি ও পণ্যের তথ্য লোড হচ্ছে...
+          </p>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+async function CategoryContent({ params }) {
+  const { id: slug } = await params;
 
   const category = await getCategory(slug);
 
-  if (!category) {
+  if (!category || !category.nameBn) {
     notFound();
   }
 
@@ -104,11 +133,7 @@ export default async function CategoryPage({ params }) {
                             : "bg-gray-100 text-gray-600"
                       }`}
                     >
-                      {isUp
-                        ? "▲"
-                        : isDown
-                          ? "▼"
-                          : "—"}{" "}
+                      {isUp ? "▲" : isDown ? "▼" : "—"}{" "}
                       {Math.abs(product.change?.pct ?? 0).toFixed(1)}%
                     </span>
                   </div>
@@ -141,5 +166,13 @@ export default async function CategoryPage({ params }) {
         )}
       </div>
     </main>
+  );
+}
+
+export default function CategoryPage({ params }) {
+  return (
+    <Suspense fallback={<CategoryLoading />}>
+      <CategoryContent params={params} />
+    </Suspense>
   );
 }

@@ -1,28 +1,35 @@
 
 import Link from "next/link";
+import { cacheLife } from "next/cache";
+
+async function getCategories() {
+  "use cache";
+
+  // ক্যাটাগরির ডেটা এক ঘণ্টার ক্যাশ প্রোফাইল ব্যবহার করবে
+  cacheLife("hours");
+
+  const res = await fetch(
+    "https://openapi.programming-hero.com/api/bazardor/categories"
+  );
+
+  if (!res.ok) {
+    throw new Error(`Categories fetch failed: ${res.status}`);
+  }
+
+  const data = await res.json();
+
+  return Array.isArray(data)
+    ? data
+    : Array.isArray(data.data)
+      ? data.data
+      : [];
+}
 
 const NavLinks = async () => {
   let categoriesData = [];
 
   try {
-    const res = await fetch(
-      "https://openapi.programming-hero.com/api/bazardor/categories",
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!res.ok) {
-      throw new Error(`Categories fetch failed: ${res.status}`);
-    }
-
-    const data = await res.json();
-
-    categoriesData = Array.isArray(data)
-      ? data
-      : Array.isArray(data.data)
-        ? data.data
-        : [];
+    categoriesData = await getCategories();
   } catch (error) {
     console.error("NavLinks error:", error);
 

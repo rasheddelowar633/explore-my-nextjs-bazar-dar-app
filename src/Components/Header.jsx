@@ -1,14 +1,11 @@
-
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import NavLinks from "./NavLinks";
 import AuthButtons from "./AuthButtons";
+import DateDisplay from "./DateDisplay";
 
 export default function Header() {
-  const date = new Date().toLocaleDateString("bn-BD", {
-    dateStyle: "full",
-  });
-
   return (
     <header className="border-b border-orange-100 bg-white shadow-sm">
       <div className="container mx-auto flex flex-wrap items-center gap-3 p-3 sm:p-4">
@@ -31,14 +28,24 @@ export default function Header() {
           </h1>
 
           <p className="mt-1 text-xs text-gray-500 sm:text-sm">
-            {date}
+            <DateDisplay />
           </p>
         </Link>
 
         <AuthButtons />
       </div>
 
-      <NavLinks />
+      <Suspense
+        fallback={
+          <nav className="container mx-auto px-4 py-3">
+            <p className="text-sm text-gray-500">
+              ক্যাটাগরি লোড হচ্ছে...
+            </p>
+          </nav>
+        }
+      >
+        <NavLinks />
+      </Suspense>
     </header>
   );
 }

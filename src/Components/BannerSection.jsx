@@ -1,11 +1,7 @@
-
 import Image from "next/image";
+import DateDisplay from "./DateDisplay";
 
 const BannerSection = () => {
-  const date = new Date().toLocaleDateString("bn-BD", {
-    dateStyle: "full",
-  });
-
   return (
     <section className="container mx-auto bg-green-50">
       <div className="grid min-h-[400px] items-center gap-8 px-4 py-10 md:grid-cols-2">
@@ -13,7 +9,7 @@ const BannerSection = () => {
         {/* Left Content */}
         <div>
           <p className="mb-3 text-sm font-medium text-green-700 md:text-base">
-            {date}
+            <DateDisplay />
           </p>
 
           <h1 className="mb-4 text-3xl font-bold leading-tight text-gray-900 md:text-5xl">
