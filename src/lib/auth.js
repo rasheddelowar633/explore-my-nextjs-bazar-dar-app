@@ -1,15 +1,42 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
-import { mongodbAdapter } from "@better-auth/mongo-adapter";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
-const client = new MongoClient(process.env.MARKET_DAR_MONGODB_URL);
+const uri = process.env.MARKET_DAR_MONGODB_URL;
+
+if (!uri) {
+  throw new Error("MARKET_DAR_MONGODB_URL is missing");
+}
+
+const client = new MongoClient(uri);
 const db = client.db("market-dar");
 
 export const auth = betterAuth({
-      emailAndPassword: { 
-    enabled: true, 
-  }, 
-  database: mongodbAdapter(db, {
-    client,
-  }),
+  database: mongodbAdapter(db, { client }),
+
+  emailAndPassword: {
+    enabled: true,
+  },
+
+  socialProviders: {
+    ...(process.env.GOOGLE_CLIENT_ID &&
+    process.env.GOOGLE_CLIENT_SECRET
+      ? {
+          google: {
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          },
+        }
+      : {}),
+
+    ...(process.env.GITHUB_CLIENT_ID &&
+    process.env.GITHUB_CLIENT_SECRET
+      ? {
+          github: {
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+          },
+        }
+      : {}),
+  },
 });
