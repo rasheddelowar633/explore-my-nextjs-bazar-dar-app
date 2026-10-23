@@ -103,7 +103,7 @@ export default function SignInPage() {
         <div className="mb-7 text-center">
           <Link
             href="/"
-            className="text-3xl font-extrabold text-orange-600"
+            className="text-3xl font-extrabold text-green-600"
           >
             Bazar Dar
           </Link>
@@ -135,7 +135,7 @@ export default function SignInPage() {
               autoComplete="email"
               required
               disabled={loading || Boolean(socialLoading)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100 disabled:bg-gray-100"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-orange-100 disabled:bg-gray-100"
             />
           </div>
 
@@ -155,14 +155,14 @@ export default function SignInPage() {
               autoComplete="current-password"
               required
               disabled={loading || Boolean(socialLoading)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100 disabled:bg-gray-100"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-orange-100 disabled:bg-gray-100"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading || Boolean(socialLoading)}
-            className="w-full rounded-lg bg-orange-600 px-4 py-3 font-semibold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-lg bg-green-600 px-4 py-3 font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "সাইন ইন হচ্ছে..." : "সাইন ইন"}
           </button>
@@ -206,7 +206,7 @@ export default function SignInPage() {
           অ্যাকাউন্ট নেই?{" "}
           <Link
             href="/signup"
-            className="font-semibold text-orange-600 hover:text-orange-700"
+            className="font-semibold text-green-600 hover:text-green-700"
           >
             সাইন আপ করুন
           </Link>
@@ -216,7 +216,7 @@ export default function SignInPage() {
         <div className="mt-4 text-center">
           <Link
             href="/"
-            className="text-sm text-gray-500 hover:text-orange-600"
+            className="text-sm text-gray-500 hover:text-green-600"
           >
             ← হোম পেজে ফিরে যান
           </Link>
