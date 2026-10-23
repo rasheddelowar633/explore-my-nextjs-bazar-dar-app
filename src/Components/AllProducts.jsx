@@ -1,4 +1,4 @@
-import React from "react";
+import Link from "next/link";
 
 const AllProducts = async () => {
   const res = await fetch(
@@ -12,7 +12,15 @@ const AllProducts = async () => {
     throw new Error("Products fetch failed");
   }
 
-  const products = await res.json();
+  const result = await res.json();
+
+  const products = Array.isArray(result)
+    ? result
+    : Array.isArray(result?.data)
+      ? result.data
+      : Array.isArray(result?.products)
+        ? result.products
+        : [];
 
   return (
     <section className="container mx-auto px-4 py-10">
@@ -22,15 +30,16 @@ const AllProducts = async () => {
         </h1>
 
         <p className="mt-2 text-gray-600">
-          মোট ৩৩ টি পণ্য দেখানো হচ্ছে
+          মোট {products.length} টি পণ্য দেখানো হচ্ছে
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 bg-gray-200 p-3 ">
+      <div className="grid grid-cols-1 gap-5 bg-gray-200 p-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
         {products.map((product) => (
-          <div
+          <Link
             key={product.id}
-            className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+            href={`/product/${product.id}`}
+            className="block rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
           >
             {/* Logo + Product Name */}
             <div className="flex items-center gap-3">
@@ -61,18 +70,26 @@ const AllProducts = async () => {
               </div>
 
               <div>
-                {product.change.dir === "up" ? (
+                {product.change?.dir === "up" ? (
                   <span className="rounded-full bg-red-50 px-3 py-1 text-sm font-semibold text-red-600">
-                    <span className="text-red-600">▲</span>  {product.change.pct}%
+                    ▲ {product.change.pct}%
+                  </span>
+                ) : product.change?.dir === "down" ? (
+                  <span className="rounded-full bg-green-50 px-3 py-1 text-sm font-semibold text-green-600">
+                    ▼ {product.change.pct}%
                   </span>
                 ) : (
-                  <span className="rounded-full bg-green-50 px-3 py-1 text-sm font-semibold text-green-600">
-                    <span className="text-green-600">▼</span> {product.change.pct}%
+                  <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-semibold text-gray-600">
+                    — {product.change?.pct ?? 0}%
                   </span>
                 )}
               </div>
             </div>
-          </div>
+
+            <p className="mt-5 border-t pt-3 text-sm font-semibold text-orange-600">
+              বিস্তারিত দেখুন →
+            </p>
+          </Link>
         ))}
       </div>
     </section>
