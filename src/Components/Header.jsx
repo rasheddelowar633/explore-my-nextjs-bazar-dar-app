@@ -14,10 +14,11 @@ export default function Header() {
           className="flex h-[55px] w-[55px] items-center justify-center rounded-xl bg-green-600 sm:h-[60px] sm:w-[60px]"
         >
           <Image
-            src="https://explore-my-nextjs-bazar-dar-app.vercel.app/public/assets/logo-icon.png"
+            src="/assets/logo-icon.png"
             alt="বাজার দর লোগো"
             width={50}
             height={50}
+            className="object-contain"
             priority
           />
         </Link>
