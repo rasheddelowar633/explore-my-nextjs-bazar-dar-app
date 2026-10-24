@@ -1,13 +1,18 @@
+
 import { headers } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 
+export const instant = false;
+
 async function getProducts() {
   try {
     const res = await fetch(
       "https://openapi.programming-hero.com/api/bazardor/products",
-      { cache: "no-store" }
+      {
+        cache: "no-store",
+      }
     );
 
     if (!res.ok) {
@@ -35,7 +40,7 @@ export default async function ProductDetailsPage({ params }) {
     headers: await headers(),
   });
 
-  // Send unsigned users to the sign-in page
+  // Redirect unsigned users to the sign-in page
   if (!session) {
     redirect(
       `/sign-in?callbackURL=${encodeURIComponent(`/product/${id}`)}`
@@ -53,7 +58,7 @@ export default async function ProductDetailsPage({ params }) {
   }
 
   const formatPrice = (price) =>
-    price != null
+    price != null && Number.isFinite(Number(price))
       ? `৳${Number(price).toLocaleString("bn-BD")}`
       : "তথ্য নেই";
 
@@ -67,6 +72,7 @@ export default async function ProductDetailsPage({ params }) {
       </Link>
 
       <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-md">
+        {/* Product header */}
         <div className="bg-orange-50 px-6 py-10 text-center">
           <div className="mb-4 text-7xl">
             {product.image || "🛒"}
@@ -86,6 +92,7 @@ export default async function ProductDetailsPage({ params }) {
           </p>
         </div>
 
+        {/* Price details */}
         <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2">
           <div className="rounded-xl bg-gray-50 p-5">
             <p className="text-sm text-gray-500">আজকের দাম</p>
@@ -116,12 +123,14 @@ export default async function ProductDetailsPage({ params }) {
           </div>
         </div>
 
+        {/* Price change */}
         {product.change && (
           <div className="px-6 pb-6">
             <div className="rounded-xl border p-4">
               <p className="text-sm text-gray-500">
                 দামের পরিবর্তন
               </p>
+
               <p
                 className={`mt-1 text-lg font-bold ${
                   product.change.dir === "up"
@@ -136,6 +145,7 @@ export default async function ProductDetailsPage({ params }) {
                   : product.change.dir === "down"
                   ? "▼ দাম কমেছে"
                   : "দাম অপরিবর্তিত"}
+
                 {product.change.pct != null
                   ? ` (${product.change.pct}%)`
                   : ""}
@@ -144,6 +154,7 @@ export default async function ProductDetailsPage({ params }) {
           </div>
         )}
 
+        {/* Market-wise prices */}
         {Array.isArray(product.markets) &&
           product.markets.length > 0 && (
             <div className="px-6 pb-6">
@@ -164,16 +175,19 @@ export default async function ProductDetailsPage({ params }) {
 
                   <tbody>
                     {product.markets.map((market, index) => (
-                      <tr key={`${market.market}-${index}`}>
+                      <tr key={`${market.market || "market"}-${index}`}>
                         <td className="border p-3">
                           {market.market || "—"}
                         </td>
+
                         <td className="border p-3">
                           {market.division || "—"}
                         </td>
+
                         <td className="border p-3">
                           {formatPrice(market.min)}
                         </td>
+
                         <td className="border p-3">
                           {formatPrice(market.max)}
                         </td>
