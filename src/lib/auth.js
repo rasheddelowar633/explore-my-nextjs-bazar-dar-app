@@ -1,11 +1,16 @@
+
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
-const uri = process.env.MARKET_DAR_MONGODB_URL;
+const uri =
+  process.env.MARKET_DAR_MONGODB_URL ||
+  process.env.MONGODB_URI;
 
 if (!uri) {
-  throw new Error("MARKET_DAR_MONGODB_URL is missing");
+  throw new Error(
+    "MongoDB connection URI is missing. Set MARKET_DAR_MONGODB_URL in your environment."
+  );
 }
 
 const client = new MongoClient(uri);
