@@ -11,7 +11,7 @@ export default function Header() {
       <div className="container mx-auto flex flex-wrap items-center gap-3 p-3 sm:p-4">
         <Link
           href="/"
-          className="flex h-[55px] w-[55px] items-center justify-center rounded-xl bg-green-600 sm:h-[60px] sm:w-[60px]"
+          className="flex h-[55px] w-[55px] shrink-0 items-center justify-center rounded-xl bg-green-600 sm:h-[60px] sm:w-[60px]"
         >
           <Image
             src="/Assets/logo-icon.png"
