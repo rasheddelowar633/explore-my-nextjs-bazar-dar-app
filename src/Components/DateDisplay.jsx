@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useSyncExternalStore } from "react";
@@ -5,10 +6,10 @@ import { useSyncExternalStore } from "react";
 const subscribe = () => () => {};
 
 function getDateSnapshot() {
-  return new Date().toLocaleDateString("bn-BD", {
+  return new Intl.DateTimeFormat("bn-BD", {
     dateStyle: "full",
     timeZone: "Asia/Dhaka",
-  });
+  }).format(new Date());
 }
 
 function getServerSnapshot() {
@@ -19,7 +20,7 @@ export default function DateDisplay() {
   const date = useSyncExternalStore(
     subscribe,
     getDateSnapshot,
-    getServerSnapshot,
+    getServerSnapshot
   );
 
   return <span>{date || "তারিখ লোড হচ্ছে..."}</span>;
